@@ -1,0 +1,9 @@
+{
+  "prizes": [
+    { "code": "X-LOTTERY-CODE-001", "status": "available" },
+    { "code": "X-LOTTERY-CODE-002", "status": "available" },
+    { "code": "X-LOTTERY-CODE-003", "status": "available" },
+    { "code": "X-LOTTERY-CODE-004", "status": "available" },
+    { "code": "X-LOTTERY-CODE-005", "status": "available" }
+  ]
+}
