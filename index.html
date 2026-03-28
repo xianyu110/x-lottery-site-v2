@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X 关注领月卡 - 抽奖中心</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1DA1F2 0%, #0d8ecf 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <div class="max-w-md mx-auto py-12 px-4">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="inline-block p-4 rounded-full gradient-bg mb-4 shadow-lg">
+                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.045 4.126H5.078z"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-2">关注领月卡</h1>
+            <p class="text-gray-600">只需简单三步，免费领取你的月卡奖品</p>
+        </div>
+
+        <!-- Task Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <div class="p-8">
+                <div class="space-y-6">
+                    <!-- Step 1 -->
+                    <div class="flex items-start gap-4" id="step-1">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">1</div>
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-gray-800">通过 X 登录</h3>
+                            <p class="text-sm text-gray-500 mb-3">授权获取你的基本信息</p>
+                            <button id="login-btn" class="w-full py-2 px-4 rounded-lg bg-black text-white font-medium hover:bg-gray-800 transition flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.045 4.126H5.078z"></path></svg>
+                                立即登录
+                            </button>
+                            <div id="login-success" class="hidden text-sm text-green-600 mt-2 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                已成功连接账号: <span id="x-username" class="font-bold"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex items-start gap-4 opacity-50 transition-opacity" id="step-2">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">2</div>
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-gray-800">关注博主</h3>
+                            <p class="text-sm text-gray-500 mb-3">关注我们的 X 账号</p>
+                            <a href="https://x.com/YourHandle" target="_blank" id="follow-btn" class="pointer-events-none block w-full py-2 px-4 rounded-lg border border-gray-300 text-gray-700 text-center font-medium hover:bg-gray-50 transition">
+                                点击去关注
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex items-start gap-4 opacity-50 transition-opacity" id="step-3">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">3</div>
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-gray-800">领取月卡</h3>
+                            <p class="text-sm text-gray-500 mb-3">系统将自动校验关注状态</p>
+                            <button id="claim-btn" disabled class="w-full py-3 px-4 rounded-xl gradient-bg text-white font-bold text-lg shadow-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                                立即领取
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-gray-400 text-xs">
+            <p>© 2026 抽奖中心 · Powered by X API</p>
+        </div>
+    </div>
+
+    <!-- Prize Modal -->
+    <div id="prize-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl scale-95 opacity-0 transition-all duration-300 transform" id="modal-content">
+            <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">恭喜获得月卡！</h2>
+            <p class="text-gray-500 mb-6">这是你的专属兑换码：</p>
+            <div class="bg-gray-100 p-4 rounded-xl font-mono text-xl text-blue-600 font-bold mb-6 border-2 border-dashed border-blue-200">
+                LOADING...
+            </div>
+            <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-gray-900 text-white font-bold hover:bg-black transition">
+                好的，记下了
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const loginBtn = document.getElementById('login-btn');
+        const followBtn = document.getElementById('follow-btn');
+        const claimBtn = document.getElementById('claim-btn');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const loginSuccess = document.getElementById('login-success');
+        const xUsername = document.getElementById('x-username');
+        const modal = document.getElementById('prize-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        // 模拟登录
+        loginBtn.addEventListener('click', () => {
+            loginBtn.innerText = '正在授权...';
+            setTimeout(() => {
+                loginBtn.classList.add('hidden');
+                loginSuccess.classList.remove('hidden');
+                xUsername.innerText = '@User_' + Math.floor(Math.random() * 1000);
+                
+                // 解锁第二步
+                step2.classList.remove('opacity-50');
+                followBtn.classList.remove('pointer-events-none');
+                followBtn.classList.add('border-blue-500', 'text-blue-500');
+            }, 1000);
+        });
+
+        // 模拟点击关注
+        followBtn.addEventListener('click', () => {
+            setTimeout(() => {
+                followBtn.innerText = '已关注 ✓';
+                followBtn.classList.replace('text-blue-500', 'text-green-500');
+                followBtn.classList.replace('border-blue-500', 'border-green-500');
+                
+                // 解锁第三步
+                step3.classList.remove('opacity-50');
+                claimBtn.removeAttribute('disabled');
+            }, 500);
+        });
+
+        // 领取逻辑 (调用后端 API)
+        claimBtn.addEventListener('click', async () => {
+            claimBtn.innerText = '正在服务器校验关注状态...';
+            claimBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/check-follow', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ x_username: xUsername.innerText })
+                });
+                const data = await response.json();
+
+                if (data.isFollowing) {
+                    document.querySelector('.font-mono').innerText = data.prizeCode;
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modalContent.classList.remove('scale-95', 'opacity-0');
+                    }, 50);
+                } else {
+                    alert('校验失败：你尚未关注博主，请先关注！');
+                    claimBtn.innerText = '立即领取';
+                    claimBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('API Error:', error);
+                alert('网络错误，请稍后再试');
+                claimBtn.innerText = '立即领取';
+                claimBtn.disabled = false;
+            }
+        });
+
+        function closeModal() {
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                claimBtn.innerText = '奖励已领取';
+            }, 300);
+        }
+    </script>
+</body>
+</html>
